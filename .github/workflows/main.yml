@@ -1,20 +1,30 @@
-name: nightfalldlp
+name: 'Detect PII'
 on:
-  push:
-    branches:
-      - master
+  issues:
+    types:
+      - opened
+      - edited
+  issue_comment:
+    types:
+      - created
+      - edited
   pull_request:
+    types:
+      - opened
+      - edited
+  pull_request_review_comment:
+    types:
+      - created
+      - edited
 jobs:
-  run-nightfalldlp:
-    name: nightfalldlp
+  detect-pii:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo Action
-        uses: actions/checkout@v2
-
-      - name: nightfallDLP action step
-        uses: nightfallai/nightfall_dlp_action@v1.0.0
-        env:
-          NIGHTFALL_API_KEY: ${{ secrets.NIGHTFALL_API_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          EVENT_BEFORE: ${{ github.event.before }}
+      - uses: rob-derosa/pii-detector@v1
+        name: "Run PII detector"
+        with:
+          azure-cognitive-subscription-key: ${{ secrets.AZURE_COGNITIVE_SUBSCRIPTION_KEY }}
+          azure-cognitive-endpoint: ${{ secrets.AZURE_COGNITIVE_ENDPOINT }}
+          categories: "email|ip|phone number"
+          label-text: "PII Detected!!"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
