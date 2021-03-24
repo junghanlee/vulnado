@@ -9,4 +9,4 @@ jobs:
       uses: reviewdog/action-detect-secrets@master
       with:
         github_token: ${{ secrets.github_token }}
-        reporter: junghanlee # Change reporter.
+        reporter: github-pr-review # Change reporter.
